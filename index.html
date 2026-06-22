@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liseckie Imperium - Sezon 2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background-color: #030503;
+            color: #e5e9e5;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="none" stroke="%23c5a059" stroke-width="2"/></svg>') 8 8, auto;
+        }
+
+        /* EKRAN KINOWEGO WSTĘPU (INTRO) */
+        #cinematic-intro {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #030503;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .intro-btn {
+            padding: 20px 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: #c5a059;
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            border-radius: 4px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .intro-btn:hover {
+            background: #c5a059;
+            color: #030503;
+            box-shadow: 0 0 40px rgba(197, 160, 89, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* MAJESTATYCZNA KORONA */
+        .crown-master {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2.2);
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+            transition: all 1.8s cubic-bezier(0.25, 1, 0.3, 1);
+        }
+
+        .crown-master.active {
+            opacity: 1;
+        }
+
+        /* Pozycja lekko NAD napisem z zapasem na łunę */
+        .crown-master.settled {
+            top: calc(50vh - 195px);
+            transform: translate(-50%, -50%) scale(0.7);
+        }
+
+        .crown-svg {
+            width: 100%;
+            height: 100%;
+            fill: url(#royalGold);
+            filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.3));
+            animation: crownFloat 3.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes crownFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-8px) rotate(0.5deg); }
+        }
+
+        /* ZŁOTA ŁUNA POD KORONĄ */
+        .crown-shimmer {
+            position: absolute;
+            width: 120px;
+            height: 40px;
+            background: radial-gradient(ellipse at center, rgba(197, 160, 89, 0.25) 0%, rgba(0,0,0,0) 70%);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+            animation: shimmerPulse 3.5s infinite alternate ease-in-out;
+        }
+
+        .crown-master.settled .crown-shimmer {
+            opacity: 1;
+        }
+
+        @keyframes shimmerPulse {
+            0% { opacity: 0.4; transform: translateX(-50%) scale(0.9); }
+            100% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* GLOBALNE TŁO POŚWIATY */
+        .royal-glow {
+            position: fixed;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.03) 0%, rgba(0,0,0,0) 75%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* GŁÓWNA SEKCJA */
+        .hero-section {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+            background: radial-gradient(circle at 50% 50%, #0a110a 0%, #030503 80%);
+            z-index: 2;
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 2s ease, transform 2s ease;
+        }
+
+        .hero-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Przestrzeń pod lewitującą koronę i jej łunę */
+        .crown-gap {
+            height: 130px;
+            width: 100%;
+        }
+
+        .title-crest {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff 10%, #c5a059 60%, #8c6f39 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .season-badge, .version-badge {
+            display: inline-block;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            background: rgba(197, 160, 89, 0.03);
+            color: #c5a059;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 6px 20px;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+
+        .version-badge {
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .kingdom-description {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.8;
+            color: #9aa49a;
+            font-weight: 300;
+            margin-bottom: 45px;
+            max-width: 620px;
+            text-align: center;
+        }
+
+        .enter-btn {
+            padding: 16px 45px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #030503;
+            background: #c5a059;
+            border: 1px solid #c5a059;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.15);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .enter-btn:hover {
+            background: transparent;
+            color: #c5a059;
+            transform: translateY(-4px);
+        }
+
+        /* LORE CARDS (ZANIKANIE / SCROLL) */
+        .lore-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 150px 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+            background: linear-gradient(180deg, rgba(10,17,10,0.3) 0%, rgba(3,5,3,0.7) 100%);
+            border-left: 2px solid #c5a059;
+            padding: 40px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+        }
+
+        .reveal-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .lore-card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            color: #c5a059;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lore-card-title::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(197,160,89,0.2), transparent);
+        }
+
+        .lore-p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #b2bcb2;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 3, 2, 0.95);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #0a110a;
+            border: 1px solid #c5a059;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border-radius: 6px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            color: #c5a059;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .modal-close {
+            margin-top: 25px;
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            color: #c5a059;
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .modal-close:hover {
+            background: rgba(197,160,89,0.1);
+        }
+
+        .footer-credits {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.8rem;
+            color: #4a544a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(255,255,255,0.01);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- KORONA (MISTRZOWSKA CZUISTA GEOMETRIA BEZ GEMÓW) -->
+    <div class="crown-master" id="royal-crown">
+        <svg class="crown-svg" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="royalGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="35%" stop-color="#e6c483" />
+                    <stop offset="70%" stop-color="#c5a059" />
+                    <stop offset="100%" stop-color="#735827" />
+                </linearGradient>
+            </defs>
+            <!-- Elegancka, czysta, symetryczna złota korona królewska -->
+            <path d="M 10,75 L 15,38 L 35,54 L 50,22 L 65,54 L 85,38 L 90,75 Z" />
+            <rect x="10" y="75" width="80" height="5" rx="1" fill="#8c6f39" />
+        </svg>
+        <!-- ELEMENT ŁUNY POD KORONĄ -->
+        <div class="crown-shimmer"></div>
+    </div>
+
+    <!-- INTRO -->
+    <div id="cinematic-intro">
+        <button class="intro-btn" onclick="startCinematic()">Wkrocz do Imperium</button>
+    </div>
+
+    <div class="royal-glow"></div>
+
+    <!-- STRONA GŁÓWNA -->
+    <div class="hero-section" id="hero">
+        <div class="crown-gap"></div>
+
+        <h1 class="title-crest">Liseckie<br>Imperium</h1>
+        
+        <div class="badge-row">
+            <div class="season-badge">Sezon II</div>
+            <div class="version-badge">Wersja 1.20.1</div>
+        </div>
+
+        <p class="kingdom-description">
+            Przed Wami całkowicie nowa, ulepszona era legendarnego świata. Powracamy z rozmachem, godnym prawdziwych władców. Przewiń dalej, by poznać prawa rządzące królestwem.
+        </p>
+
+        <button class="enter-btn" onclick="openRoyalModal()">Oczekuj wezwania</button>
+    </div>
+
+    <!-- SEKCJA DOLNA -->
+    <div class="lore-section">
+        <div class="reveal-card">
+            <h2 class="lore-card-title">Zaawansowany System Profesji</h2>
+            <p class="lore-p">
+                W Liseckim Imperium nikt nie rodzi się bez przeznaczenia. Wprowadzamy unikalny, głęboko zakorzeniony system zaawansowanych prac, pozwalający każdemu mieszkańcowi obrać zupełnie inną ścieżkę życiową. Zostań szanowanym kowalem, dostarczającym królewskiej armii unikalny oręż, potężnym magnatem ziemskim lub skrytym rzemieślnikiem. Każda decyzja ukształtuje Twoją pozycję na dworze.
+            </p>
+        </div>
+
+        <div class="reveal-card">
+            <h2 class="lore-card-title">Rozbudowany System Ekonomii</h2>
+            <p class="lore-p">
+                Serce Imperium bije w rytmie wolnego handlu, rygorystycznie kontrolowanego przez królewski skarbiec. Nowy sezon przynosi dynamiczny rynek, na którym znajdziesz wyspecjalizowane targowiska z żywnością, unikalnymi blokami budowlanymi do wznoszenia monumentalnych twierdz oraz mistrzowskimi narzędziami. Bogactwo mierzone jest tu nie tylko złotem, ale wpływem na gospodarkę całego królestwa.
+            </p>
+        </div>
+
+        <div class="reveal-card">
+            <h2 class="lore-card-title">Królewski Wymiar Sprawiedliwości</h2>
+            <p class="lore-p">
+                Wszelka zdrada, kradzież i nieposłuszeństwo wobec korony spotka się z natychmiastową odpowiedzią. Zaimplementowany autorski system sądownictwa oraz rozbudowany kompleks więzienny sprawią, że żaden rzezimieszek nie pozostanie bezkarny. Strażnicy Imperium czuwają dzień i noc, by chronić wypracowany ład – odsiadka w lochach to nie mit, to surowa rzeczywistość dla opornych.
+            </p>
+        </div>
+
+        <div class="reveal-card">
+            <h2 class="lore-card-title">Archaiczne Pola oraz Rozgrywka Roleplay</h2>
+            <p class="lore-p">
+                Odkryj potęgę rozległych pól uprawnych, wymagających strategicznego zarządzania i współpracy. Liseckie Imperium staje się areną dla dojrzałej rozgrywki Roleplay, gdzie sojusze, dekrety, wojny gildii oraz codzienne interakcje rodzą prawdziwe, historyczne sagi. Wznieś swój ród na wyżyny dyplomacji lub zgiń w zapomnieniu.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer-credits">
+        Liseckie Imperium © 2026 • Wszelkie prawa zastrzeżone
+    </div>
+
+    <div class="modal-overlay" id="royalModal">
+        <div class="modal-box">
+            <h3 class="modal-title">Dekret Królewski</h3>
+            <p class="lore-p" style="text-align: center; font-size: 1rem;">
+                Twoje imię zostało zapisane w zwojach oczekujących. W najbliższym czasie otrzymasz oficjalne, luksusowe zaproszenie na serwer za pośrednictwem heroldów. Przygotuj się.
+            </p>
+            <button class="modal-close" onclick="closeRoyalModal()">Przyjmuję wezwanie</button>
+        </div>
+    </div>
+
+    <!-- FILTROWANY KINOWY SYSTEM DŹWIĘKOWY (BEZ SYREN) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playDeepCinematicBoom() {
+            const now = audioCtx.currentTime;
+
+            // 1. BASOWY SUB-BOOM (Głębokie tąpnięcie)
+            const subOsc = audioCtx.createOscillator();
+            const subGain = audioCtx.createGain();
+            subOsc.type = 'sine';
+            subOsc.frequency.setValueAtTime(55, now);
+            subOsc.frequency.linearRampToValueAtTime(30, now + 2.5);
+            subGain.gain.setValueAtTime(0.9, now);
+            subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+            subOsc.connect(subGain);
+            subGain.connect(audioCtx.destination);
+
+            // 2. FILTROWANY SZUM KINOWY (Zamiast pisków - dostojny szum wiatru)
+            const bufferSize = audioCtx.sampleRate * 2.5;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(300, now);
+            filter.frequency.exponentialRampToValueAtTime(80, now + 2.0);
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.4, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
+
+            noise.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+
+            // 3. NISKI, CIEPŁY AKORD HARMONIJNY (Wspiera telefony)
+            const midOsc = audioCtx.createOscillator();
+            const midGain = audioCtx.createGain();
+            midOsc.type = 'sine';
+            midOsc.frequency.setValueAtTime(110, now); // Ciepła częstotliwość A2
+            midGain.gain.setValueAtTime(0.3, now);
+            midGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+            midOsc.connect(midGain);
+            midGain.connect(audioCtx.destination);
+
+            // Start wszystkich emiterów dźwięku
+            subOsc.start(now);
+            noise.start(now);
+            midOsc.start(now);
+
+            subOsc.stop(now + 2.5);
+            noise.stop(now + 2.5);
+            midOsc.stop(now + 2.0);
+        }
+
+        function startCinematic() {
+            playDeepCinematicBoom();
+
+            const introScreen = document.getElementById('cinematic-intro');
+            introScreen.style.opacity = '0';
+            setTimeout(() => introScreen.remove(), 1500);
+
+            const crown = document.getElementById('royal-crown');
+            crown.classList.add('active');
+
+            setTimeout(() => {
+                crown.classList.add('settled');
+            }, 500);
+
+            setTimeout(() => {
+                document.getElementById('hero').classList.add('visible');
+            }, 1300);
+        }
+
+        function openRoyalModal() { document.getElementById('royalModal').classList.add('open'); }
+        function closeRoyalModal() { document.getElementById('royalModal').classList.remove('open'); }
+
+        // Parallax scroll i ujawnianie kart
+        const cards = document.querySelectorAll('.reveal-card');
+        const hero = document.getElementById('hero');
+        const crown = document.getElementById('royal-crown');
+
+        window.addEventListener('scroll', () => {
+            const triggerBottom = window.innerHeight * 0.85;
+            let scrollPos = window.scrollY;
+
+            if (scrollPos < window.innerHeight) {
+                let opacityVal = 1 - (scrollPos / (window.innerHeight * 0.6));
+                hero.style.opacity = opacityVal;
+                crown.style.opacity = opacityVal;
+                hero.style.transform = `translateY(${scrollPos * 0.2}pxpx)`;
+                crown.style.transform = `translate(-50%, calc(-50% + ${scrollPos * 0.18}px)) scale(0.7)`;
+            }
+
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if(cardTop < triggerBottom) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
