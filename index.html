@@ -100,6 +100,35 @@
             box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
         }
 
+        /* 📱 RESPONSYWNE MENU DLA TELEFONÓW (SWIPE + DUŻE PRZYCISKI) */
+        @media (max-width: 768px) {
+            .top-navigation {
+                top: 15px;
+                left: 0;
+                right: 0;
+                padding: 10px 20px;
+                overflow-x: auto; /* Włącza przewijanie poziome palcem */
+                white-space: nowrap; /* Zapobiega zrzucaniu przycisków do nowej linii */
+                justify-content: flex-start;
+                gap: 12px;
+                -webkit-overflow-scrolling: touch; /* Płynny scroll na iOS */
+                scrollbar-width: none; /* Ukrywa scrollbar na Firefox */
+            }
+
+            .top-navigation::-webkit-scrollbar {
+                display: none; /* Ukrywa scrollbar na Chrome/Safari/Edge */
+            }
+
+            .search-trigger {
+                flex: 0 0 auto; /* Blokuje kurczenie się przycisków */
+                padding: 16px 28px; /* Znacznie powiększona strefa kliknięcia */
+                font-size: 0.9rem;
+                background: rgba(10, 10, 10, 0.85); /* Czytelniejsze tło na mobile */
+                border: 1px solid rgba(197, 160, 89, 0.5);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            }
+        }
+
         /* PANEL WYSZUKIWARKI */
         .search-panel {
             position: fixed;
@@ -468,20 +497,20 @@
         .map-img-wrapper {
             width: 100%;
             height: 0;
-            padding-bottom: 70%; /* Proporcje wyświetlania mapy */
+            padding-bottom: 70%; 
             overflow: hidden;
             position: relative;
             border: 1px solid rgba(197, 160, 89, 0.1);
         }
 
         .map-img {
-            width: 135%; /* Skala tła ukrywająca elementy boczne */
+            width: 135%; 
             height: auto;
             max-width: none;
             position: absolute;
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%); /* Centrowanie widoku terytorium */
+            transform: translate(-50%, -50%); 
             transition: transform 0.6s ease;
         }
 
@@ -747,14 +776,17 @@
 </head>
 <body>
 
+    <!-- PREMIUM KURSOR -->
     <div id="custom-cursor"></div>
 
+    <!-- ELEGANCKA ZAKŁADKA NAWIGACJI -->
     <div class="top-navigation" id="topNav">
         <button class="search-trigger" onclick="toggleInformacje(true)">Informacje</button>
         <button class="search-trigger" onclick="toggleMapSection(true)">Mapa</button>
         <button class="search-trigger" onclick="toggleSearch(true)">Wyszukiwarka</button>
     </div>
 
+    <!-- PANEL WYSZUKIWARKI -->
     <div class="search-panel" id="searchPanel">
         <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
         <div class="search-container-relative">
@@ -766,6 +798,7 @@
         </div>
     </div>
 
+    <!-- KORONA INTEGRALNA -->
     <div class="crown-master" id="royal-crown">
         <svg class="crown-svg" viewBox="0 0 100 100">
             <defs>
@@ -781,12 +814,15 @@
         </svg>
     </div>
 
+    <!-- INTRO KINOWE -->
     <div id="cinematic-intro">
         <button class="intro-btn" onclick="startCinematic()">Wkrocz do Imperium</button>
     </div>
 
+    <!-- KUNSZTOWNE TŁO HERALDYCZNE -->
     <div id="royal-glow-pattern"></div>
 
+    <!-- SEKCJA GŁÓWNA -->
     <div class="hero-section" id="hero">
         <div class="crown-gap"></div>
         <h1 class="title-crest">Liseckie<br>Imperium</h1>
@@ -804,6 +840,7 @@
     </div>
 
 
+    <!-- 👑 SEKCJA INFORMACJE -->
     <div class="info-view-container" id="informacjeView">
         <div class="info-page-content">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
@@ -815,6 +852,7 @@
 
             <div class="info-grid">
                 
+                <!-- KARTA 1: BAR BAJKA -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -826,6 +864,7 @@
                     </p>
                 </div>
 
+                <!-- KARTA 2: KOPALNIA WUJEK -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -837,6 +876,7 @@
                     </p>
                 </div>
 
+                <!-- KARTA 3: STARE OSIEDLE -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -848,6 +888,7 @@
                     </p>
                 </div>
 
+                <!-- KARTA 4: POMNIK ZAŁOŻYCIELA -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -859,6 +900,7 @@
                     </p>
                 </div>
 
+                <!-- KARTA 5: ZAKŁAD KARNY -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -870,6 +912,7 @@
                     </p>
                 </div>
 
+                <!-- KARTA 6: REWIR KIBICÓW -->
                 <div class="info-card">
                     <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
                     <div class="info-img-wrapper">
@@ -877,12 +920,13 @@
                     </div>
                     <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Zbrojownia Frakcji i Oręż</h3>
                     <p class="lore-p" style="font-size: 0.95rem;">
-                        Potężne gildyjne pancerze wszystkich kibiców w okolicy. Prezentując od lewej strony, widzimy rynsztunki bojowe należące do: Sparty Nowe Osiedla, Hetmana Liski, Perły Telatyn oraz Setników United. Poza samymi zbrojami, każdy z tych klubów ma w zanadrzu unikalne, niebezpieczne bronie, które można nabyć bezpośrednio u ich przywódców. Każdy gracz ma obowiązek opowiedzieć się za jedną z frakcji i, jeśli zajdzie taka potrzeba, bez wahania stanąć do walki w ciemnej uliczce.
+                        Potężne gildyjne pancerze wszystkich kibiców w okolicy. Prezentując od lewej strony, widzimy rynsztunki bojowe należące do: Sparty Nowe Osiedla, Hetmana Liski, Perły Telatyn oraz Setników United. Poza samymi zbrojami, każdy z tych klubów ma w zanadrzu unikalne, niebezpieczne bronie, które można nabyć bezpośrednio u ich przywódców. Każdy gracz ma obowiązek opowiedzieć się za jedną z frakcji i, jika zajdzie taka potrzeba, bez wahania stanąć do walki w ciemnej uliczce.
                     </p>
                 </div>
 
             </div>
 
+            <!-- PRZYCISK POWROTU DO STRONY GŁÓWNEJ -->
             <div style="text-align: center; margin-top: 40px;">
                 <button class="enter-btn" onclick="toggleInformacje(false)">Strona Główna</button>
             </div>
@@ -890,6 +934,7 @@
     </div>
 
 
+    <!-- 👑 SEKCJA MAPA -->
     <div class="info-view-container map-view-container" id="mapSection">
         <div class="map-page-content">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
@@ -899,6 +944,7 @@
                 <p class="info-subtitle">Oto oficjalna mapa terytorium</p>
             </div>
 
+            <!-- RAMKA I OBRAZ MAPY -->
             <div class="map-frame">
                 <div class="map-img-wrapper">
                     <img src="https://i.ibb.co/Y4w6jSGx/java-runtime-gamma-Screenshot-2026-06-30-21-19-31-86.png" alt="Mapa Imperium" class="map-img">
@@ -909,6 +955,7 @@
                 Nasi elitarni królewscy kartografowie przygotowali odzwierciedlenie ziem Liseckiego Imperium. Na tej mapie z lotu ptaka możesz dostrzec strategiczne rewiry klubowe, centralny Stadion, przemysłowe głębiny Kopalni Wujek oraz majaczący na Górze Olimp majestatyczny pałac Założyciela. Wykorzystaj tę wiedzę, aby zaplanować kolejny ruch – legalny lub nie.
             </p>
 
+            <!-- PRZYCISK POWROTU DO STRONY GŁÓWNEJ -->
             <div style="text-align: center; margin-top: 20px;">
                 <button class="enter-btn" onclick="toggleMapSection(false)">Strona Główna</button>
             </div>
@@ -916,6 +963,7 @@
     </div>
 
 
+    <!-- SEKCJA LORE (KARTY INFORMACYJNE NA STRONIE GŁÓWNEJ) -->
     <div class="lore-section" id="loreSection">
         
         <div id="noResults" style="display: none; text-align: center; font-family: 'Cinzel', serif; color: #8c6f39; padding: 60px; letter-spacing: 2px; font-size: 1.2rem;">
@@ -955,10 +1003,12 @@
         </div>
     </div>
 
+    <!-- STOPKA -->
     <div class="footer-credits">
         Liseckie Imperium © 2026 • Wszelkie prawa zastrzeżone
     </div>
 
+    <!-- OKNO MODALNE DEKRETU -->
     <div class="modal-overlay" id="royalModal">
         <div class="modal-box">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
@@ -970,6 +1020,7 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGICZNY -->
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const customCursor = document.getElementById('custom-cursor');
