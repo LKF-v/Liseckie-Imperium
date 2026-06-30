@@ -7,12 +7,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap');
 
-        /* CAŁKOWITE I BEZWZGLĘDNE UKRYCIE KURSORA WINDOWS NA WSZYSTKIM */
+        /* CAŁKOWITE I BEZWZGLĘDNE UKRYCIE KURSORA WINDOWS NA KOMPUTERACH */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none !important; /* !important na wszystkim blokuje Windowsa nawet na hover */
+            cursor: none !important; 
         }
 
         html, body {
@@ -37,7 +37,6 @@
             z-index: 10000;
             box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
             will-change: transform;
-            /* Animujemy tylko wielkość i kolor, pozycję płynnie steruje JS */
             transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
                         height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
                         background-color 0.3s ease, 
@@ -45,13 +44,145 @@
                         box-shadow 0.3s ease;
         }
 
-        /* Efekt najechania na klikalne obiekty - kursor luksusowo się rozszerza */
         .cursor-hover {
             width: 54px !important;
             height: 54px !important;
             background-color: rgba(197, 160, 89, 0.08) !important;
             border-color: #f3d9a2 !important;
             box-shadow: 0 0 25px rgba(197, 160, 89, 0.6) !important;
+        }
+
+        /* [NAPRAWA] WYKRYWANIE TELEFONÓW / EKRANÓW DOTYKOWYCH */
+        @media (pointer: coarse) {
+            *, *::before, *::after {
+                cursor: auto !important; /* Przywrócenie naturalnego dotyku na telefonie */
+            }
+            #custom-cursor {
+                display: none !important; /* Całkowite usunięcie sztucznego kursora na smartfonach */
+            }
+        }
+
+        /* ELEGANCKA ZAKŁADKA WYSZUKIWARKI */
+        .top-navigation {
+            position: fixed;
+            top: 25px;
+            right: 40px;
+            z-index: 85;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .top-navigation.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .search-trigger {
+            font-family: 'Cinzel', serif;
+            color: #c5a059;
+            background: rgba(197, 160, 89, 0.02);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .search-trigger:hover {
+            background: rgba(197, 160, 89, 0.1);
+            border-color: #f3d9a2;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+        }
+
+        /* PANEL WYSZUKIWARKI */
+        .search-panel {
+            position: fixed;
+            top: -280px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 750px;
+            background: rgba(10, 10, 10, 0.96);
+            border: 1px solid #c5a059;
+            border-top: none;
+            padding: 45px 50px;
+            z-index: 900;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            transition: top 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+        }
+
+        .search-panel.open {
+            top: 0;
+        }
+
+        .search-container-relative {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-label {
+            font-family: 'Cinzel', serif;
+            color: #c5a059;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+        }
+
+        .search-input-wrapper {
+            width: 100%;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(197, 160, 89, 0.3);
+            padding: 12px 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.2rem;
+            color: #ffffff;
+            text-align: center;
+            outline: none;
+            transition: all 0.4s ease;
+        }
+
+        .search-input:focus {
+            border-bottom-color: #f3d9a2;
+            background: rgba(197, 160, 89, 0.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .search-close-btn {
+            margin-top: 25px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #888;
+            padding: 8px 22px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .search-close-btn:hover {
+            border-color: #c5a059;
+            color: #c5a059;
+        }
+
+        .search-hidden {
+            display: none !important;
         }
 
         /* EKRAN INTRO */
@@ -96,7 +227,7 @@
             transform: scale(1.05);
         }
 
-        /* KORONA I JEJ ELEGANCKI POZYCJONOWANIE */
+        /* KORONA INTEGRALNA */
         .crown-master {
             position: absolute;
             width: 140px;
@@ -114,6 +245,13 @@
         .crown-master.settled {
             top: calc(50vh - 195px);
             transform: translate(-50%, -50%) scale(0.7);
+        }
+
+        /* [NAPRAWA] ABSOLUTNE ZNIKANIE KORONY GDY MODAL JEST OTWARTY */
+        body.modal-open .crown-master {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
         .crown-svg {
@@ -261,7 +399,7 @@
             box-shadow: 0 15px 40px rgba(197, 160, 89, 0.4);
         }
 
-        /* OKNA / KARTY LORE */
+        /* OKNA LORE */
         .lore-section {
             max-width: 950px;
             margin: 0 auto;
@@ -288,7 +426,7 @@
             transform: translateY(0);
         }
 
-        /* WZORKI NA ROGACH */
+        /* ORNAMENTY */
         .orn {
             position: absolute;
             width: 24px;
@@ -341,12 +479,12 @@
             text-align: justify;
         }
 
-        /* MODAL */
+        /* OKNO MODALNE (Z-INDEX ZWIĘKSZONY DLA PEWNOŚCI) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 100;
+            z-index: 2000; /* Nad wszystkim oprócz kursora */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -419,8 +557,25 @@
 </head>
 <body>
 
-    <!-- NAPRAWIONY I WYADAPTOWANY KURSOR -->
+    <!-- KURSOR (ZABLOKOWANY NA TELEFONACH PRZEZ CSS) -->
     <div id="custom-cursor"></div>
+
+    <!-- ELEGANCKA ZAKŁADKA WYSZUKIWARKI -->
+    <div class="top-navigation" id="topNav">
+        <button class="search-trigger" onclick="toggleSearch(true)">Wyszukiwarka</button>
+    </div>
+
+    <!-- PANEL WYSZUKIWARKI -->
+    <div class="search-panel" id="searchPanel">
+        <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+        <div class="search-container-relative">
+            <span class="search-label">Przeszukaj Kroniki Imperium</span>
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Wpisz frazę (np. Magnat, Kluby, Prawo)..." autocomplete="off">
+            </div>
+            <button class="search-close-btn" onclick="toggleSearch(false)">Zamknij okno</button>
+        </div>
+    </div>
 
     <!-- KORONA INTEGRALNA -->
     <div class="crown-master" id="royal-crown">
@@ -463,8 +618,13 @@
         <button class="enter-btn" onclick="openRoyalModal()">Oczekuj wezwania</button>
     </div>
 
-    <!-- KARTY Z INFORMACJAMI -->
-    <div class="lore-section">
+    <!-- KARTY LORE -->
+    <div class="lore-section" id="loreSection">
+        
+        <div id="noResults" style="display: none; text-align: center; font-family: 'Cinzel', serif; color: #8c6f39; padding: 60px; letter-spacing: 2px; font-size: 1.2rem;">
+            Brak dekretów spełniających kryteria wezwania...
+        </div>
+
         <div class="reveal-card">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
             <h2 class="lore-card-title">Od Plebsu do Magnata</h2>
@@ -515,37 +675,29 @@
         </div>
     </div>
 
-    <!-- SKRYPTY AUDIO + MATEMATYCZNA INERCJA KURSORA -->
+    <!-- SKRYPTY LOGICZNE -->
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const customCursor = document.getElementById('custom-cursor');
         
-        // Zmienne do płynnej fizyki kursora
-        let mouseX = 0, mouseY = 0;   // Realna pozycja myszy
-        let cursorX = 0, cursorY = 0; // Wygładzona pozycja pierścienia
+        let mouseX = 0, mouseY = 0;   
+        let cursorX = 0, cursorY = 0; 
 
-        // Śledzenie ruchu myszy
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
 
-        // PĘTLA LOGICZNA - Nadawanie luksusowego efektu "płynnego opóźnienia" (Inercja)
         function animateCursor() {
-            // Wzór matematyczny zbliżający pierścień do myszy o 15% dystansu na klatkę (bardzo gładki efekt)
             cursorX += (mouseX - cursorX) * 0.15;
             cursorY += (mouseY - cursorY) * 0.15;
-            
-            // Renderowanie pozycji z zachowaniem wyśrodkowania za pomocą translate
             customCursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-            
             requestAnimationFrame(animateCursor);
         }
-        requestAnimationFrame(animateCursor); // Start pętli fizyki
+        requestAnimationFrame(animateCursor); 
 
-        // SYSTEM HOVERÓW - reaguje na najechanie
         function refreshCursorListeners() {
-            const clickables = document.querySelectorAll('button, .intro-btn, .enter-btn, .modal-close, .reveal-card');
+            const clickables = document.querySelectorAll('button, input, .search-trigger, .intro-btn, .enter-btn, .modal-close, .reveal-card, .search-close-btn');
             clickables.forEach(el => {
                 el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
                 el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
@@ -553,7 +705,63 @@
         }
         refreshCursorListeners();
 
-        // AUDIO KINOWE KOŁATANIE BOOM
+        // WYSZUKIWARKA
+        const searchPanel = document.getElementById('searchPanel');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+        const cards = document.querySelectorAll('.reveal-card');
+
+        function toggleSearch(open) {
+            if (open) {
+                searchPanel.classList.add('open');
+                searchInput.focus();
+                window.scrollTo({
+                    top: document.getElementById('loreSection').offsetTop - 280,
+                    behavior: 'smooth'
+                });
+            } else {
+                searchPanel.classList.remove('open');
+                searchInput.value = '';
+                cards.forEach(card => card.classList.remove('search-hidden'));
+                noResults.style.display = 'none';
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            let visibleCards = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.lore-card-title').textContent.toLowerCase();
+                const content = card.querySelector('.lore-p').textContent.toLowerCase();
+
+                if (title.includes(query) || content.includes(query)) {
+                    card.classList.remove('search-hidden');
+                    card.classList.add('active'); 
+                    visibleCards++;
+                } else {
+                    card.classList.add('search-hidden');
+                }
+            });
+
+            if (visibleCards === 0 && query !== '') {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+
+        // [NAPRAWA JS] MODAL INTEGRACJA Z KLASĄ MODAL-OPEN
+        function openRoyalModal() { 
+            document.getElementById('royalModal').classList.add('open'); 
+            document.body.classList.add('modal-open'); // Dodanie klasy powodującej znikanie korony
+        }
+        function closeRoyalModal() { 
+            document.getElementById('royalModal').classList.remove('open'); 
+            document.body.classList.remove('modal-open'); // Korona powraca
+        }
+
+        // CINEMATIC BOOM
         function playDeepCinematicBoom() {
             const now = audioCtx.currentTime;
 
@@ -606,14 +814,13 @@
             crown.classList.add('active');
 
             setTimeout(() => { crown.classList.add('settled'); }, 500);
-            setTimeout(() => { document.getElementById('hero').classList.add('visible'); }, 1300);
+            setTimeout(() => { 
+                document.getElementById('hero').classList.add('visible'); 
+                document.getElementById('topNav').classList.add('visible'); 
+            }, 1300);
         }
 
-        function openRoyalModal() { document.getElementById('royalModal').classList.add('open'); }
-        function closeRoyalModal() { document.getElementById('royalModal').classList.remove('open'); }
-
         // PARALLAX SCROLL
-        const cards = document.querySelectorAll('.reveal-card');
         const hero = document.getElementById('hero');
         const crown = document.getElementById('royal-crown');
 
@@ -624,7 +831,11 @@
             if (scrollPos < window.innerHeight) {
                 let opacityVal = 1 - (scrollPos / (window.innerHeight * 0.6));
                 hero.style.opacity = opacityVal < 0 ? 0 : opacityVal;
-                crown.style.opacity = opacityVal < 0 ? 0 : opacityVal;
+                
+                // Aktualizuj przezroczystość korony scrollowaniem tylko gdy modal jest zamknięty
+                if(!document.body.classList.contains('modal-open')) {
+                    crown.style.opacity = opacityVal < 0 ? 0 : opacityVal;
+                }
                 
                 hero.style.transform = `translateY(${scrollPos * 0.2}px)`;
                 crown.style.transform = `translate(-50%, calc(-50% + ${scrollPos * 0.18}px)) scale(0.7)`;
@@ -633,7 +844,9 @@
             cards.forEach(card => {
                 const cardTop = card.getBoundingClientRect().top;
                 if(cardTop < triggerBottom) {
-                    card.classList.add('active');
+                    if(!card.classList.contains('search-hidden')) {
+                        card.classList.add('active');
+                    }
                 } else {
                     card.classList.remove('active');
                 }
