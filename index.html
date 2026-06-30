@@ -52,17 +52,17 @@
             box-shadow: 0 0 25px rgba(197, 160, 89, 0.6) !important;
         }
 
-        /* [NAPRAWA] WYKRYWANIE TELEFONÓW / EKRANÓW DOTYKOWYCH */
+        /* WYKRYWANIE TELEFONÓW / EKRANÓW DOTYKOWYCH */
         @media (pointer: coarse) {
             *, *::before, *::after {
-                cursor: auto !important; /* Przywrócenie naturalnego dotyku na telefonie */
+                cursor: auto !important;
             }
             #custom-cursor {
-                display: none !important; /* Całkowite usunięcie sztucznego kursora na smartfonach */
+                display: none !important;
             }
         }
 
-        /* ELEGANCKA ZAKŁADKA WYSZUKIWARKI */
+        /* ELEGANCKA ZAKŁADKA NAWIGACJI */
         .top-navigation {
             position: fixed;
             top: 25px;
@@ -71,6 +71,8 @@
             opacity: 0;
             transform: translateY(-10px);
             transition: opacity 1s ease, transform 1s ease;
+            display: flex;
+            gap: 15px;
         }
 
         .top-navigation.visible {
@@ -236,7 +238,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(2.2);
             opacity: 0;
-            z-index: 1000;
+            z-index: 70;
             pointer-events: none;
             transition: all 1.8s cubic-bezier(0.25, 1, 0.3, 1);
         }
@@ -245,13 +247,6 @@
         .crown-master.settled {
             top: calc(50vh - 195px);
             transform: translate(-50%, -50%) scale(0.7);
-        }
-
-        /* [NAPRAWA] ABSOLUTNE ZNIKANIE KORONY GDY MODAL JEST OTWARTY */
-        body.modal-open .crown-master {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
         .crown-svg {
@@ -292,7 +287,7 @@
             z-index: 2;
             opacity: 0;
             transform: scale(0.97);
-            transition: opacity 2s ease, transform 2s ease;
+            transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .hero-section.visible {
@@ -318,19 +313,6 @@
             position: relative;
         }
 
-        .title-crest::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 250px; height: 100px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C7.58 2 4 5.58 4 10c0 4.42 3.58 8 8 8s8-3.58 8-8c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" fill="%23c5a059" opacity="0.05"/></svg>');
-            background-size: 24px 24px;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: -1;
-        }
-
         .badge-row {
             display: flex;
             gap: 15px;
@@ -350,15 +332,6 @@
             backdrop-filter: blur(5px);
             position: relative;
             box-shadow: inset 0 0 10px rgba(197, 160, 89, 0.05);
-        }
-
-        .season-badge::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(197, 160, 89, 0.3) 50%, rgba(197, 160, 89, 0.1) 100%);
-            border-radius: 3px;
-            pointer-events: none;
         }
 
         .version-badge {
@@ -399,13 +372,212 @@
             box-shadow: 0 15px 40px rgba(197, 160, 89, 0.4);
         }
 
-        /* OKNA LORE */
+        /* 👑 DEDYKOWANY, PEŁNOEKRANOWY WIDOK INFORMACJI / MAPY */
+        .info-view-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+            background-image: radial-gradient(circle at center, rgba(197, 160, 89, 0.05) 0%, #050505 100%);
+            z-index: 80;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.03);
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow-y: auto;
+            padding: 120px 20px 60px 20px;
+        }
+
+        /* 🛠️ ABSOLUTNA BLOKADA SUWAKÓW TŁA I POPRAWKA DLA PEŁNEGO EKRANU */
+        html.info-view-active, body.info-view-active,
+        html.map-view-active, body.map-view-active,
+        html.modal-open, body.modal-open {
+            overflow: hidden !important; 
+        }
+
+        /* WIDOK MAPY: TŁO KONTENERA */
+        .map-view-container {
+            background-image: radial-gradient(circle at center, rgba(197, 160, 89, 0.02) 0%, #050505 100%);
+        }
+
+        /* 🛠️ ROZDZIELENIE I NAPRAWA WYŚWIETLANIA SEKCE (ZAPOBIEGA NAKŁADANIU SIĘ) */
+        body.info-view-active #informacjeView {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        
+        body.map-view-active #mapSection {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        
+        /* Reakcje strony głównej na aktywację trybów */
+        body.info-view-active .hero-section,
+        body.map-view-active .hero-section {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(-40px) !important;
+        }
+        body.info-view-active #royal-crown,
+        body.map-view-active #royal-crown {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translate(-50%, -100%) scale(0.2) !important;
+        }
+        body.info-view-active .lore-section,
+        body.map-view-active .lore-section {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(40px) !important;
+        }
+        body.info-view-active .footer-credits,
+        body.map-view-active .footer-credits {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* STRUKTURA KART WEWNĄTRZ INFORMACJI / MAPY */
+        .info-page-content, .map-page-content {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+        }
+
+        /* WIDOK MAPY: RAMKA I SKALOWANIE WIDOKU */
+        .map-frame {
+            background: linear-gradient(135deg, rgba(10,10,10,0.6) 0%, rgba(20,20,20,0.9) 100%);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            padding: 20px;
+            position: relative;
+            margin: 0 auto 30px auto;
+            max-width: 900px;
+            transition: all 0.4s ease;
+        }
+
+        .map-frame:hover {
+            border-color: rgba(197, 160, 89, 0.5);
+            background: rgba(20, 20, 20, 0.9);
+        }
+
+        .map-img-wrapper {
+            width: 100%;
+            height: 0;
+            padding-bottom: 70%; /* Proporcje wyświetlania mapy */
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(197, 160, 89, 0.1);
+        }
+
+        .map-img {
+            width: 135%; /* Skala tła ukrywająca elementy boczne */
+            height: auto;
+            max-width: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* Centrowanie widoku terytorium */
+            transition: transform 0.6s ease;
+        }
+
+        .map-frame:hover .map-img {
+            transform: translate(-50%, -50%) scale(1.03);
+        }
+
+        .map-page-content:hover .orn-tl { top: 6px; left: 6px; }
+        .map-page-content:hover .orn-tr { top: 6px; right: 6px; }
+        .map-page-content:hover .orn-bl { bottom: 6px; left: 6px; }
+        .map-page-content:hover .orn-br { bottom: 6px; right: 6px; }
+        .map-page-content:hover { border-color: rgba(197, 160, 89, 0.4); box-shadow: 0 25px 60px rgba(197, 160, 89, 0.08); }
+
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .info-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            color: #c5a059;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .info-subtitle {
+            font-size: 1rem;
+            color: #888;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .info-grid, .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid, .map-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-page-content, .map-page-content {
+                padding: 20px 15px;
+            }
+        }
+
+        .info-card {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            padding: 20px;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .info-card:hover {
+            border-color: rgba(197, 160, 89, 0.5);
+            background: rgba(20, 20, 20, 0.9);
+        }
+
+        .info-img-wrapper {
+            width: 100%;
+            height: 280px;
+            background: #020202;
+            overflow: hidden;
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .info-card:hover .info-img {
+            transform: scale(1.04);
+        }
+
+        /* OKNA LORE STRONY GŁÓWNEJ */
         .lore-section {
             max-width: 950px;
             margin: 0 auto;
             padding: 50px 20px 150px 20px;
             position: relative;
             z-index: 3;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .reveal-card {
@@ -426,7 +598,7 @@
             transform: translateY(0);
         }
 
-        /* ORNAMENTY */
+        /* ORNAMENTY NAROŻNE */
         .orn {
             position: absolute;
             width: 24px;
@@ -455,10 +627,27 @@
         .orn-br { bottom: 12px; right: 12px; border-left: none; border-top: none; }
         .orn-br::before { bottom: -2px; right: -2px; }
 
-        .reveal-card:hover .orn-tl { top: 6px; left: 6px; }
-        .reveal-card:hover .orn-tr { top: 6px; right: 6px; }
-        .reveal-card:hover .orn-bl { bottom: 6px; left: 6px; }
-        .reveal-card:hover .orn-br { bottom: 6px; right: 6px; }
+        /* POPRAWKA DLA PRECYZYJNEGO HOVER ORNAMENTÓW NA KARTACH / CONTENTACH */
+        .info-card:hover .orn-tl,
+        .info-page-content:hover .orn-tl,
+        .reveal-card:hover .orn-tl,
+        .map-page-content:hover .orn-tl { top: 6px; left: 6px; }
+
+        .info-card:hover .orn-tr,
+        .info-page-content:hover .orn-tr,
+        .reveal-card:hover .orn-tr,
+        .map-page-content:hover .orn-tr { top: 6px; right: 6px; }
+
+        .info-card:hover .orn-bl,
+        .info-page-content:hover .orn-bl,
+        .reveal-card:hover .orn-bl,
+        .map-page-content:hover .orn-bl { bottom: 6px; left: 6px; }
+
+        .info-card:hover .orn-br,
+        .info-page-content:hover .orn-br,
+        .reveal-card:hover .orn-br,
+        .map-page-content:hover .orn-br { bottom: 6px; right: 6px; }
+
         .reveal-card:hover { border-color: rgba(197, 160, 89, 0.4); box-shadow: 0 25px 60px rgba(197, 160, 89, 0.08); }
 
         .lore-card-title {
@@ -479,12 +668,12 @@
             text-align: justify;
         }
 
-        /* OKNO MODALNE (Z-INDEX ZWIĘKSZONY DLA PEWNOŚCI) */
+        /* OKNA MODALNE */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 2000; /* Nad wszystkim oprócz kursora */
+            z-index: 2000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -552,20 +741,20 @@
             border-top: 1px solid rgba(255,255,255,0.02);
             position: relative;
             z-index: 3;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
     </style>
 </head>
 <body>
 
-    <!-- KURSOR (ZABLOKOWANY NA TELEFONACH PRZEZ CSS) -->
     <div id="custom-cursor"></div>
 
-    <!-- ELEGANCKA ZAKŁADKA WYSZUKIWARKI -->
     <div class="top-navigation" id="topNav">
+        <button class="search-trigger" onclick="toggleInformacje(true)">Informacje</button>
+        <button class="search-trigger" onclick="toggleMapSection(true)">Mapa</button>
         <button class="search-trigger" onclick="toggleSearch(true)">Wyszukiwarka</button>
     </div>
 
-    <!-- PANEL WYSZUKIWARKI -->
     <div class="search-panel" id="searchPanel">
         <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
         <div class="search-container-relative">
@@ -577,7 +766,6 @@
         </div>
     </div>
 
-    <!-- KORONA INTEGRALNA -->
     <div class="crown-master" id="royal-crown">
         <svg class="crown-svg" viewBox="0 0 100 100">
             <defs>
@@ -593,15 +781,12 @@
         </svg>
     </div>
 
-    <!-- INTRO KINOWE -->
     <div id="cinematic-intro">
         <button class="intro-btn" onclick="startCinematic()">Wkrocz do Imperium</button>
     </div>
 
-    <!-- KUNSZTOWNE TŁO HERALDYCZNE -->
     <div id="royal-glow-pattern"></div>
 
-    <!-- SEKCJA GŁÓWNA -->
     <div class="hero-section" id="hero">
         <div class="crown-gap"></div>
         <h1 class="title-crest">Liseckie<br>Imperium</h1>
@@ -618,7 +803,119 @@
         <button class="enter-btn" onclick="openRoyalModal()">Oczekuj wezwania</button>
     </div>
 
-    <!-- KARTY LORE -->
+
+    <div class="info-view-container" id="informacjeView">
+        <div class="info-page-content">
+            <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+            
+            <div class="info-header">
+                <h2 class="info-title">Nowości w Sezonie II</h2>
+                <p class="info-subtitle">Odkryj sekrety, lokale i struktury Liseckiego Imperium</p>
+            </div>
+
+            <div class="info-grid">
+                
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/VYVF3NCC/java-runtime-gamma-Screenshot-2026-06-30-15-40-02-06.png" alt="Bar Bajka" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Serce Półświatka: Bar Bajka</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Centrum życia społecznego i przestępczego w Liskach powraca w nowej odsłonie! Bar Bajka przeszedł gruntowny remont, zyskując kolejną kondygnację, ekskluzywną lożę VIP oraz małe mieszkanie na dachu, podczas gdy wejścia pilnuje czujny ochroniarz. Przez to miejsce przewijać się będą wszelkiego rodzaju szumowiny, dilerzy i rzezimieszki... a być może nawet Ty. W tle majaczą skromniejsze domostwa, na których dumnie powiewa sztandar klubu Hetman Liski.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/mVztFPQZ/java-runtime-gamma-Screenshot-2026-06-30-15-42-31-61.png" alt="Kopalnia Wujek" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Kopalnia Wujek: Krew, Pot i Diamenty</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Główne miejsce pracy, codziennych spotkań i twardego życia liseckich górników. Choć surowy krajobraz przemysłowy na powierzchni może sprawiać mroczne wrażenie, praca w głębinach kopalni skrywa potężny potencjał zarobkowy. Pod grubymi warstwami ziemi i kamienia czekają na odkrycie niezwykle cenne metale oraz rzadkie kruszce, gotowe wzbogacić każdego, kto nie boi się ciężkiego kilofa.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/JRHD7QLH/java-runtime-gamma-Screenshot-2026-06-30-15-31-00-91.png" alt="Stare Osiedle" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Cienie Starego Osiedla</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Ta dzielnica Lisek lata świetności ma już niestety za sobą. Widać to zwłaszcza po nadszarpniętym bloku po lewej stronie, w którym niedawno wybuchł groźny pożar. Co ciekawe, mimo wsobecnego betonu i trudnych warunków, kwiaty przed budynkami mają się znakomicie. Blok po prawej to główna twierdza fanów Hetmana Liski, natomiast ten po lewej zajmują Setniki United. Choć dwa zwaśnione kluby dzielą zaledwie metry, na osiedlu panuje obecnie kruchy, względny spokój... do czasu.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/9HC4gHR0/java-runtime-gamma-Screenshot-2026-06-30-15-34-04-100.png" alt="Pomnik Założyciela" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Dziedzictwo i Olimp</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Monumentalny pomnik wzniesiony na cześć pierwszego założyciela, który przed laty zapoczątkował imperialne tradycje naszych ziem. W tle, na samym szczycie, majestatycznie prezentuje się jego dawny pałac na Górze Olimp. Wśród mieszkańców krąży ekscytująca legenda: podobno w samej podstawie tego potężnego pomnika ukryto pradawny, drogocenny skarb pozostawiony przez pionierów z pierwszej edycji serwera.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/KcHh0g16/java-runtime-gamma-Screenshot-2026-06-30-15-37-18-22.png" alt="Zakład Karny" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Rygor Lisek Waręskich: Więzienie</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Oto oficjalny zakład karny w Liskach Waręskich – ponure miejsce stworzone dla najbardziej zgorzkniałych przestępców i marginesu społecznego. To tutaj izolowani będą dilerzy i pospolici złodzieje. Oczywiście stanie się tak tylko wtedy, gdy policja przestanie być leniwa i skorumpowana, co w tych rewirach zakrawa na cud. Jeśli jednak sprawiedliwość dosięgnie winnego i strażnicy zamkną za nim kraty – stąd nie ma już ucieczki.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+                    <div class="info-img-wrapper">
+                        <img src="https://i.ibb.co/gLZBTJNd/java-runtime-gamma-Screenshot-2026-06-30-15-25-24-39.png" alt="Gildyjne Pancerze" class="info-img">
+                    </div>
+                    <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Zbrojownia Frakcji i Oręż</h3>
+                    <p class="lore-p" style="font-size: 0.95rem;">
+                        Potężne gildyjne pancerze wszystkich kibiców w okolicy. Prezentując od lewej strony, widzimy rynsztunki bojowe należące do: Sparty Nowe Osiedla, Hetmana Liski, Perły Telatyn oraz Setników United. Poza samymi zbrojami, każdy z tych klubów ma w zanadrzu unikalne, niebezpieczne bronie, które można nabyć bezpośrednio u ich przywódców. Każdy gracz ma obowiązek opowiedzieć się za jedną z frakcji i, jeśli zajdzie taka potrzeba, bez wahania stanąć do walki w ciemnej uliczce.
+                    </p>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="enter-btn" onclick="toggleInformacje(false)">Strona Główna</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="info-view-container map-view-container" id="mapSection">
+        <div class="map-page-content">
+            <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
+            
+            <div class="info-header">
+                <h2 class="info-title">Kartografia Imperium</h2>
+                <p class="info-subtitle">Oto oficjalna mapa terytorium</p>
+            </div>
+
+            <div class="map-frame">
+                <div class="map-img-wrapper">
+                    <img src="https://i.ibb.co/Y4w6jSGx/java-runtime-gamma-Screenshot-2026-06-30-21-19-31-86.png" alt="Mapa Imperium" class="map-img">
+                </div>
+            </div>
+
+            <p class="lore-p" style="text-align: center; margin-bottom: 40px;">
+                Nasi elitarni królewscy kartografowie przygotowali odzwierciedlenie ziem Liseckiego Imperium. Na tej mapie z lotu ptaka możesz dostrzec strategiczne rewiry klubowe, centralny Stadion, przemysłowe głębiny Kopalni Wujek oraz majaczący na Górze Olimp majestatyczny pałac Założyciela. Wykorzystaj tę wiedzę, aby zaplanować kolejny ruch – legalny lub nie.
+            </p>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="enter-btn" onclick="toggleMapSection(false)">Strona Główna</button>
+            </div>
+        </div>
+    </div>
+
+
     <div class="lore-section" id="loreSection">
         
         <div id="noResults" style="display: none; text-align: center; font-family: 'Cinzel', serif; color: #8c6f39; padding: 60px; letter-spacing: 2px; font-size: 1.2rem;">
@@ -637,7 +934,7 @@
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
             <h2 class="lore-card-title">Cienisty Biznes i Surowe Prawo</h2>
             <p class="lore-p">
-                Szybkie bogactwo kryje się w strefie cienia. Możesz otworzyć własne, nielegalne biznesy związane z obrotem ziołem czy papierosami, jednak ryzyko jest ogromne. W tej edycji system policyjny oraz więziennictwo zostały drastycznie rozbudowane. Służby porządkowe i zaawansowany aparat sądownictwa działają bezlitośnie – gracze muszą stale dbać o swój majątek i sprytnie ukrywać ho przed czujnym okiem władz.
+                Szybkie bogactwo kryje się w strefie cienia. Możesz otworzyć własne, nielegalne biznesy związane z obrotem ziołem czy papierosami, jednak ryzyko jest ogromne. W tej edycji system policyjny oraz więziennictwo zostały drastycznie rozbudowane. Służby porządkowe i zaawansowany aparat sądownictwa działają bezlitośnie – gracze muszą stale dbać o swój majątek i sprytnie ukrywać go przed czujnym okiem władz.
             </p>
         </div>
 
@@ -658,24 +955,21 @@
         </div>
     </div>
 
-    <!-- STOPKA -->
     <div class="footer-credits">
         Liseckie Imperium © 2026 • Wszelkie prawa zastrzeżone
     </div>
 
-    <!-- OKNO MODALNE -->
     <div class="modal-overlay" id="royalModal">
         <div class="modal-box">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
             <h3 class="modal-title">Dekret Królewski</h3>
             <p class="lore-p" style="text-align: center; font-size: 1rem;">
-                Twoje imię zostało zapisane w zwojach oczekujących. W najbliższym czasie otrzymasz oficjalne, luksusowe zaproszenie na serwer za pośrednictwem heroldów. Przygotuj się na starcie z prawem i walkę o status magnata.
+                Twoje imię zostało zapisane w zwojach oczekujących. W najbliższym czasie otrzymasz oficjalne, luksusowe zaproszenie na serwer za profesjonalnym pośrednictwem heroldów. Przygotuj się na starcie z prawem i walkę o status magnata.
             </p>
             <button class="modal-close" onclick="closeRoyalModal()">Przyjmuję wezwanie</button>
         </div>
     </div>
 
-    <!-- SKRYPTY LOGICZNE -->
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const customCursor = document.getElementById('custom-cursor');
@@ -697,7 +991,7 @@
         requestAnimationFrame(animateCursor); 
 
         function refreshCursorListeners() {
-            const clickables = document.querySelectorAll('button, input, .search-trigger, .intro-btn, .enter-btn, .modal-close, .reveal-card, .search-close-btn');
+            const clickables = document.querySelectorAll('button, input, .search-trigger, .intro-btn, .enter-btn, .modal-close, .reveal-card, .search-close-btn, .info-card, .map-frame');
             clickables.forEach(el => {
                 el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
                 el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
@@ -705,13 +999,56 @@
         }
         refreshCursorListeners();
 
-        // WYSZUKIWARKA
+        // KONTROLA PŁYNNEGO PRZEJŚCIA SEKCJI INFORMACJI
+        function toggleInformacje(open) {
+            const infoView = document.getElementById('informacjeView');
+            if (open && document.body.classList.contains('map-view-active')) {
+                toggleMapSection(false);
+            }
+
+            if (open) {
+                document.body.classList.add('info-view-active');
+                document.documentElement.classList.add('info-view-active');
+                infoView.scrollTop = 0; 
+            } else {
+                document.body.classList.remove('info-view-active');
+                document.documentElement.classList.remove('info-view-active');
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('scroll'));
+                }, 300);
+            }
+        }
+
+        // KONTROLA PŁYNNEGO PRZEJŚCIA SEKCJI MAPY
+        function toggleMapSection(open) {
+            const mapSection = document.getElementById('mapSection');
+            if (open && document.body.classList.contains('info-view-active')) {
+                toggleInformacje(false);
+            }
+
+            if (open) {
+                document.body.classList.add('map-view-active');
+                document.documentElement.classList.add('map-view-active');
+                mapSection.scrollTop = 0; 
+            } else {
+                document.body.classList.remove('map-view-active');
+                document.documentElement.classList.remove('map-view-active');
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('scroll'));
+                }, 300);
+            }
+        }
+
+        // KONTROLA WYSZUKIWARKI
         const searchPanel = document.getElementById('searchPanel');
         const searchInput = document.getElementById('searchInput');
         const noResults = document.getElementById('noResults');
         const cards = document.querySelectorAll('.reveal-card');
 
         function toggleSearch(open) {
+            if (open && document.body.classList.contains('info-view-active')) toggleInformacje(false);
+            if (open && document.body.classList.contains('map-view-active')) toggleMapSection(false);
+
             if (open) {
                 searchPanel.classList.add('open');
                 searchInput.focus();
@@ -751,17 +1088,19 @@
             }
         });
 
-        // [NAPRAWA JS] MODAL INTEGRACJA Z KLASĄ MODAL-OPEN
+        // MODAL DEKRETU Z PEŁNĄ BLOKADĄ SUWAKÓW
         function openRoyalModal() { 
             document.getElementById('royalModal').classList.add('open'); 
-            document.body.classList.add('modal-open'); // Dodanie klasy powodującej znikanie korony
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
         }
         function closeRoyalModal() { 
             document.getElementById('royalModal').classList.remove('open'); 
-            document.body.classList.remove('modal-open'); // Korona powraca
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
         }
 
-        // CINEMATIC BOOM
+        // KINOWY DŹWIĘK SYNTEZATORA (AUDIO API)
         function playDeepCinematicBoom() {
             const now = audioCtx.currentTime;
 
@@ -820,11 +1159,13 @@
             }, 1300);
         }
 
-        // PARALLAX SCROLL
+        // PARALLAX I REVEAL SCROLL EFFECTS
         const hero = document.getElementById('hero');
         const crown = document.getElementById('royal-crown');
 
         window.addEventListener('scroll', () => {
+            if (document.body.classList.contains('info-view-active') || document.body.classList.contains('map-view-active')) return;
+
             const triggerBottom = window.innerHeight * 0.88;
             let scrollPos = window.scrollY;
 
@@ -832,7 +1173,6 @@
                 let opacityVal = 1 - (scrollPos / (window.innerHeight * 0.6));
                 hero.style.opacity = opacityVal < 0 ? 0 : opacityVal;
                 
-                // Aktualizuj przezroczystość korony scrollowaniem tylko gdy modal jest zamknięty
                 if(!document.body.classList.contains('modal-open')) {
                     crown.style.opacity = opacityVal < 0 ? 0 : opacityVal;
                 }
