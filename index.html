@@ -62,7 +62,7 @@
             }
         }
 
-        /* ELEGANCKA ZAKŁADKA NAWIGACJI */
+        /* ELEGANCKA ZAKŁADKA NAWIGACJI (DESKTOP) */
         .top-navigation {
             position: fixed;
             top: 25px;
@@ -100,32 +100,46 @@
             box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
         }
 
-        /* 📱 RESPONSYWNE MENU DLA TELEFONÓW (SWIPE + DUŻE PRZYCISKI) */
+        /* 📱 RESPONSYWNE MENU DLA TELEFONÓW (PEŁNY SWIPE OD LEWEJ DO PRAWEJ) */
         @media (max-width: 768px) {
             .top-navigation {
-                top: 15px;
-                left: 0;
-                right: 0;
-                padding: 10px 20px;
-                overflow-x: auto; /* Włącza przewijanie poziome palcem */
-                white-space: nowrap; /* Zapobiega zrzucaniu przycisków do nowej linii */
-                justify-content: flex-start;
-                gap: 12px;
-                -webkit-overflow-scrolling: touch; /* Płynny scroll na iOS */
-                scrollbar-width: none; /* Ukrywa scrollbar na Firefox */
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                padding: 16px 20px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important; /* Bezwzględny zakaz zrzucania przycisków w dół */
+                justify-content: flex-start !important; /* Wyrównanie od lewej, umożliwiające przewijanie w prawo */
+                overflow-x: auto !important; /* Aktywacja przewijania poziomego palcem */
+                overflow-y: hidden !important;
+                gap: 12px !important;
+                background: rgba(10, 10, 10, 0.94) !important; /* Eleganckie ciemne tło odcinające menu od reszty strony */
+                backdrop-filter: blur(10px) !important; /* Efekt rozmycia pod menu */
+                border-bottom: 1px solid rgba(197, 160, 89, 0.2) !important;
+                -webkit-overflow-scrolling: touch !important; /* Płynny i bezwładnościowy scroll na iPhone/iOS */
+                scrollbar-width: none !important; /* Ukrycie brzydkiego paska przewijania na Firefox */
             }
 
+            /* Ukrycie paska przewijania dla Chrome, Safari i nowych przeglądarek */
             .top-navigation::-webkit-scrollbar {
-                display: none; /* Ukrywa scrollbar na Chrome/Safari/Edge */
+                display: none !important;
             }
 
             .search-trigger {
-                flex: 0 0 auto; /* Blokuje kurczenie się przycisków */
-                padding: 16px 28px; /* Znacznie powiększona strefa kliknięcia */
-                font-size: 0.9rem;
-                background: rgba(10, 10, 10, 0.85); /* Czytelniejsze tło na mobile */
-                border: 1px solid rgba(197, 160, 89, 0.5);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                flex: 0 0 auto !important; /* ABSOLUTNA BLOKADA ZMNIEJSZANIA / ŚCISKANIA PRZYCISKÓW */
+                padding: 14px 26px !important; /* Duża i wygodna strefa kliknięcia dla kciuka */
+                font-size: 0.85rem !important;
+                letter-spacing: 1px !important;
+                background: rgba(197, 160, 89, 0.05) !important;
+                border: 1px solid rgba(197, 160, 89, 0.4) !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            }
+            
+            /* Przesunięcie kontenerów widoków lekko w dół, by nie chowały się pod nowym paskiem */
+            .info-view-container {
+                padding-top: 100px !important;
             }
         }
 
@@ -1245,4 +1259,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
