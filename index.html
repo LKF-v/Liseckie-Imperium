@@ -110,26 +110,25 @@
                 padding: 16px 20px !important;
                 display: flex !important;
                 flex-direction: row !important;
-                flex-wrap: nowrap !important; /* Bezwzględny zakaz zrzucania przycisków w dół */
-                justify-content: flex-start !important; /* Wyrównanie od lewej, umożliwiające przewijanie w prawo */
-                overflow-x: auto !important; /* Aktywacja przewijania poziomego palcem */
+                flex-wrap: nowrap !important;
+                justify-content: flex-start !important;
+                overflow-x: auto !important;
                 overflow-y: hidden !important;
                 gap: 12px !important;
-                background: rgba(10, 10, 10, 0.94) !important; /* Eleganckie ciemne tło odcinające menu od reszty strony */
-                backdrop-filter: blur(10px) !important; /* Efekt rozmycia pod menu */
+                background: rgba(10, 10, 10, 0.94) !important;
+                backdrop-filter: blur(10px) !important;
                 border-bottom: 1px solid rgba(197, 160, 89, 0.2) !important;
-                -webkit-overflow-scrolling: touch !important; /* Płynny i bezwładnościowy scroll na iPhone/iOS */
-                scrollbar-width: none !important; /* Ukrycie brzydkiego paska przewijania na Firefox */
+                -webkit-overflow-scrolling: touch !important;
+                scrollbar-width: none !important;
             }
 
-            /* Ukrycie paska przewijania dla Chrome, Safari i nowych przeglądarek */
             .top-navigation::-webkit-scrollbar {
                 display: none !important;
             }
 
             .search-trigger {
-                flex: 0 0 auto !important; /* ABSOLUTNA BLOKADA ZMNIEJSZANIA / ŚCISKANIA PRZYCISKÓW */
-                padding: 14px 26px !important; /* Duża i wygodna strefa kliknięcia dla kciuka */
+                flex: 0 0 auto !important;
+                padding: 14px 26px !important;
                 font-size: 0.85rem !important;
                 letter-spacing: 1px !important;
                 background: rgba(197, 160, 89, 0.05) !important;
@@ -137,10 +136,90 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
             }
             
-            /* Przesunięcie kontenerów widoków lekko w dół, by nie chowały się pod nowym paskiem */
             .info-view-container {
                 padding-top: 100px !important;
             }
+        }
+
+        /* KONTENER SEKCE IP */
+        .ip-section-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 12px;
+        }
+
+        /* PANEL IP SERWERA */
+        .ip-box-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(197, 160, 89, 0.03);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            padding: 10px 20px;
+            border-radius: 4px;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(197, 160, 89, 0.02);
+            transition: border-color 0.3s ease;
+        }
+
+        .ip-box-wrapper:hover {
+            border-color: rgba(197, 160, 89, 0.4);
+        }
+
+        .ip-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 1px;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+        }
+
+        .ip-copy-btn {
+            background: rgba(197, 160, 89, 0.08);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            color: #c5a059;
+            padding: 6px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .ip-copy-btn:hover {
+            background: #c5a059;
+            color: #000000;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        /* CHWILOWY KOMUNIKAT TOAST NA EKRANIE */
+        .toast-notification {
+            position: fixed;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.96);
+            border: 1px solid #c5a059;
+            color: #f3d9a2;
+            padding: 14px 35px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 10005;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 20px rgba(197, 160, 89, 0.15);
+            opacity: 0;
+            border-radius: 2px;
+            transition: bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            bottom: 40px;
+            opacity: 1;
         }
 
         /* PANEL WYSZUKIWARKI */
@@ -272,7 +351,7 @@
             transform: scale(1.05);
         }
 
-        /* KORONA INTEGRALNA */
+        /* KORONA INTEGRALNA - POPRAWIONA POZYCJA WYŻEJ */
         .crown-master {
             position: absolute;
             width: 140px;
@@ -288,7 +367,7 @@
 
         .crown-master.active { opacity: 1; }
         .crown-master.settled {
-            top: calc(50vh - 195px);
+            top: calc(50vh - 255px); /* Przesunięto bezpiecznie w górę */
             transform: translate(-50%, -50%) scale(0.7);
         }
 
@@ -338,7 +417,7 @@
             transform: scale(1);
         }
 
-        .crown-gap { height: 130px; width: 100%; }
+        .crown-gap { height: 155px; width: 100%; } /* Zwiększono przerwę dla idealnego rozkładu */
 
         .title-crest {
             font-family: 'Cinzel', serif;
@@ -359,7 +438,7 @@
         .badge-row {
             display: flex;
             gap: 15px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
         }
 
         .season-badge, .version-badge {
@@ -442,7 +521,7 @@
             background-image: radial-gradient(circle at center, rgba(197, 160, 89, 0.02) 0%, #050505 100%);
         }
 
-        /* 🛠️ ROZDZIELENIE I NAPRAWA WYŚWIETLANIA SEKCE (ZAPOBIEGA NAKŁADANIU SIĘ) */
+        /* 🛠️ ROZDZIELENIE I NAPRAWA WYŚWIETLANIA SEKCE */
         body.info-view-active #informacjeView {
             opacity: 1;
             pointer-events: auto;
@@ -670,7 +749,6 @@
         .orn-br { bottom: 12px; right: 12px; border-left: none; border-top: none; }
         .orn-br::before { bottom: -2px; right: -2px; }
 
-        /* POPRAWKA DLA PRECYZYJNEGO HOVER ORNAMENTÓW NA KARTACH / CONTENTACH */
         .info-card:hover .orn-tl,
         .info-page-content:hover .orn-tl,
         .reveal-card:hover .orn-tl,
@@ -793,9 +871,14 @@
     <!-- PREMIUM KURSOR -->
     <div id="custom-cursor"></div>
 
-    <!-- ELEGANCKA ZAKŁADKA NAWIGACJI -->
+    <!-- CHWILOWY KOMUNIKAT KOPIOWANIA -->
+    <div class="toast-notification" id="toastNotification">
+        Pomyślnie skopiowano!
+    </div>
+
+    <!-- ELEGANCKA ZAKŁADKA NAWIGACJI (Zmieniono: Nowości) -->
     <div class="top-navigation" id="topNav">
-        <button class="search-trigger" onclick="toggleInformacje(true)">Informacje</button>
+        <button class="search-trigger" onclick="toggleInformacje(true)">Nowości</button>
         <button class="search-trigger" onclick="toggleMapSection(true)">Mapa</button>
         <button class="search-trigger" onclick="toggleSearch(true)">Wyszukiwarka</button>
     </div>
@@ -846,6 +929,18 @@
             <div class="version-badge">Wersja 1.20.1</div>
         </div>
 
+        <!-- PANEL IP SERWERA Z INTERAKTYWNYM POKAZYWANIEM/UKRYWANIEM -->
+        <div class="ip-section-container">
+            <button class="enter-btn" id="showIpBtn" onclick="revealIp()" style="padding: 10px 28px; font-size: 0.8rem; box-shadow: 0 5px 15px rgba(197, 160, 89, 0.15);">Pokaż IP</button>
+            
+            <div class="ip-box-wrapper" id="ipBoxWrapper" style="display: none;">
+                <span class="ip-text">Liseckie-Imperium.aternos.me:36521</span>
+                <button class="ip-copy-btn" onclick="copyServerIp()">Kopiuj</button>
+            </div>
+            
+            <button class="search-close-btn" id="hideIpBtn" onclick="hideIp()" style="display: none; margin-top: 2px; padding: 4px 12px; font-size: 0.65rem;">Ukryj IP</button>
+        </div>
+
         <p class="kingdom-description">
             Nowa, bezwzględna era autentycznej rozgrywki. Od skromnego plebsu po potężnego magnata – Twoja pozycja zależy wyłącznie od ciężkiej pracy, sprytu i zdolności ukrywania majątku przed koroną.
         </p>
@@ -854,7 +949,7 @@
     </div>
 
 
-    <!-- 👑 SEKCJA INFORMACJE -->
+    <!-- 👑 SEKCJA NOWOŚCI (Dawne Informacje) -->
     <div class="info-view-container" id="informacjeView">
         <div class="info-page-content">
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
@@ -934,7 +1029,7 @@
                     </div>
                     <h3 class="lore-card-title" style="font-size: 1.3rem; margin-bottom: 10px;">Zbrojownia Frakcji i Oręż</h3>
                     <p class="lore-p" style="font-size: 0.95rem;">
-                        Potężne gildyjne pancerze wszystkich kibiców w okolicy. Prezentując od lewej strony, widzimy rynsztunki bojowe należące do: Sparty Nowe Osiedla, Hetmana Liski, Perły Telatyn oraz Setników United. Poza samymi zbrojami, każdy z tych klubów ma w zanadrzu unikalne, niebezpieczne bronie, które można nabyć bezpośrednio u ich przywódców. Każdy gracz ma obowiązek opowiedzieć się za jedną z frakcji i, jika zajdzie taka potrzeba, bez wahania stanąć do walki w ciemnej uliczce.
+                        Potężne gildyjne pancerze wszystkich kibiców w okolicy. Prezentując od lewej strony, widzimy rynsztunki bojowe należące do: Sparty Nowe Osiedla, Hetmana Liski, Perły Telatyn oraz Setników United. Poza samymi zbrojami, każdy z tych klubów ma w zanadrzu unikalne, niebezpieczne bronie, które można nabyć bezpośrednio u ich przywódców. Każdy gracz ma obowiązek opowiedzieć się za jedną z frakcji i, jeśli zajdzie taka potrzeba, bez wahania stanąć do walki w ciemnej uliczce.
                     </p>
                 </div>
 
@@ -996,7 +1091,7 @@
             <div class="orn orn-tl"></div><div class="orn orn-tr"></div><div class="orn orn-bl"></div><div class="orn orn-br"></div>
             <h2 class="lore-card-title">Cienisty Biznes i Surowe Prawo</h2>
             <p class="lore-p">
-                Szybkie bogactwo kryje się w strefie cienia. Możesz otworzyć własne, nielegalne biznesy związane z obrotem ziołem czy papierosami, jednak ryzyko jest ogromne. W tej edycji system policyjny oraz więziennictwo zostały drastycznie rozbudowane. Służby porządkowe i zaawansowany aparat sądownictwa działają bezlitośnie – gracze muszą stale dbać o swój majątek i sprytnie ukrywać go przed czujnym okiem władz.
+                Szybkie bogactwo kryje się w strefie cienia. Możesz otworzyć własne, nielegalne biznesy związane z obrotem ziołem czy papierosami, jednak ryzyko jest ogromne. W tej edycji system policyjny oraz więziennictwo zostały drastiwnie rozbudowane. Służby porządkowe i zaawansowany aparat sądownictwa działają bezlitośnie – gracze muszą stale dbać o swój majątek i sprytnie ukrywać go przed czujnym okiem władz.
             </p>
         </div>
 
@@ -1056,7 +1151,7 @@
         requestAnimationFrame(animateCursor); 
 
         function refreshCursorListeners() {
-            const clickables = document.querySelectorAll('button, input, .search-trigger, .intro-btn, .enter-btn, .modal-close, .reveal-card, .search-close-btn, .info-card, .map-frame');
+            const clickables = document.querySelectorAll('button, input, .search-trigger, .intro-btn, .enter-btn, .modal-close, .reveal-card, .search-close-btn, .info-card, .map-frame, .ip-copy-btn');
             clickables.forEach(el => {
                 el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
                 el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
@@ -1064,7 +1159,47 @@
         }
         refreshCursorListeners();
 
-        // KONTROLA PŁYNNEGO PRZEJŚCIA SEKCJI INFORMACJI
+        // LOGIKA INTERAKTYWNEGO WIDOKU IP SERWERA
+        function revealIp() {
+            document.getElementById('showIpBtn').style.display = 'none';
+            document.getElementById('ipBoxWrapper').style.display = 'flex';
+            document.getElementById('hideIpBtn').style.display = 'inline-block';
+            refreshCursorListeners();
+        }
+
+        function hideIp() {
+            document.getElementById('showIpBtn').style.display = 'inline-block';
+            document.getElementById('ipBoxWrapper').style.display = 'none';
+            document.getElementById('hideIpBtn').style.display = 'none';
+            customCursor.classList.remove('cursor-hover');
+        }
+
+        // LOGIKA KOPIOWANIA IP ORAZ WYŚWIETLANIA KOMUNIKATU TOAST
+        function copyServerIp() {
+            const ipString = "Liseckie-Imperium.aternos.me:36521";
+            
+            navigator.clipboard.writeText(ipString).then(() => {
+                triggerToast();
+            }).catch(err => {
+                const el = document.createElement('textarea');
+                el.value = ipString;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                triggerToast();
+            });
+        }
+
+        function triggerToast() {
+            const toast = document.getElementById('toastNotification');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2300);
+        }
+
+        // KONTROLA PŁYNNEGO PRZEJŚCIA SEKCJI INFORMACJI (NOWOŚCI)
         function toggleInformacje(open) {
             const infoView = document.getElementById('informacjeView');
             if (open && document.body.classList.contains('map-view-active')) {
@@ -1259,4 +1394,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
